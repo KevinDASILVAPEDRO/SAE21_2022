@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 
 void INIT_2048() {
@@ -85,8 +86,8 @@ void add_two(int empty) {
     if (empty > 0) {
         n = rand() % empty;
     } else {
-    // Faire quelque chose si empty est égal à zéro
-}
+        // Faire quelque chose si empty est égal à zéro
+    }
 
     for (i = 0; i < Size; i++) {
         for (j = 0; j < Size; j++) {
@@ -243,6 +244,8 @@ int main() {
     display_board();
     int add = 1;
     key dir;
+    bool score_atteint = false; // Ajout de la variable booléenne pour vérifier si le score de 2048 a été atteint
+
     while ((dir = get_key()) != END) {
         if (play(dir)) {
             add = 1;
@@ -250,7 +253,26 @@ int main() {
             add = 0;
         }
         display_board();
+        if (Score >= 2048) {
+            score_atteint = true;
+            break;
+        }
         game_over(add);
     }
+
+    if (score_atteint) {
+        move(Size * 2 + 2, 0);
+        printw("Vous avez gagnez !");
+        move(Size * 2 + 4, 0);
+        refresh();
+        getch();
+    } else {
+        move(Size * 2 + 2, 0);
+        printw("Game over !");
+        move(Size * 2 + 4, 0);
+        refresh();
+        getch();
+    }
+
     DONE_2048();
 }
